@@ -4,22 +4,15 @@ import os
 import csv
 from datetime import datetime
 from collections import deque
-
-# -----------------------------------
-# CONFIG
-# -----------------------------------
+# configure
 CASCADE_FILE = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 MODEL_FILE = "trainer.yml"
 LABEL_MAP_FILE = "label_map.npy"
 ATTENDANCE_FILE = "attendance.csv"
-
 FACE_SIZE_MIN = 130
 CONFIDENCE_THRESHOLD = 45
-FRAMES_REQUIRED = 8   # SAME FACE IN 8 FRAMES
-
-# -----------------------------------
-# LOAD MODELS
-# -----------------------------------
+FRAMES_REQUIRED = 8   
+# model loading
 face_cascade = cv2.CascadeClassifier(CASCADE_FILE)
 if face_cascade.empty():
     raise IOError("Haarcascade not loaded")
@@ -28,10 +21,7 @@ recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read(MODEL_FILE)
 
 label_map = np.load(LABEL_MAP_FILE, allow_pickle=True).item()
-
-# -----------------------------------
-# ATTENDANCE SETUP
-# -----------------------------------
+#  attendence setup
 if not os.path.exists(ATTENDANCE_FILE):
     with open(ATTENDANCE_FILE, "w", newline="") as f:
         writer = csv.writer(f)
@@ -40,11 +30,8 @@ if not os.path.exists(ATTENDANCE_FILE):
 marked_students = set()
 recent_predictions = deque(maxlen=FRAMES_REQUIRED)
 
-# -----------------------------------
-# CAMERA
-# -----------------------------------
 cap = cv2.VideoCapture(0)
-print("📷 Camera started. Hold face steady...")
+print(" Camera started. Hold face steady...")
 
 while True:
     ret, frame = cap.read()
@@ -81,10 +68,7 @@ while True:
         recent_predictions.clear()
         label = "Unknown"
         color = (0, 0, 255)
-
-    # -------------------------------
-    # FINAL VERIFICATION
-    # -------------------------------
+   # verfication
     if len(recent_predictions) == FRAMES_REQUIRED:
         if len(set(recent_predictions)) == 1:
             confirmed_id = recent_predictions[0]
@@ -99,7 +83,7 @@ while True:
                         now.strftime("%H:%M:%S")
                     ])
                 marked_students.add(confirmed_id)
-                print(f"✅ Attendance CONFIRMED for {confirmed_id}")
+                print(f"Attendance CONFIRMED for {confirmed_id}")
 
             recent_predictions.clear()
 
@@ -113,4 +97,4 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
-print("🛑 Program ended")
+print("Program ended")
