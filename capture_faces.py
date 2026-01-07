@@ -1,16 +1,9 @@
 import cv2
 import os
 
-# -----------------------------
-# CONFIGURATION
-# -----------------------------
 FACES_FOLDER = "faces"
 IMAGES_PER_STUDENT = 20
 CAMERA_ID = 0
-
-# -----------------------------
-# LOAD HAAR CASCADE (SAFE WAY)
-# -----------------------------
 face_cascade = cv2.CascadeClassifier(
     cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 )
@@ -18,19 +11,12 @@ face_cascade = cv2.CascadeClassifier(
 if face_cascade.empty():
     print("❌ Haar Cascade NOT loaded")
     exit()
-
-# -----------------------------
-# INPUT STUDENT ID
-# -----------------------------
+# Input student ID
 student_id = input("Enter Student ID (100, 101, etc): ").strip()
 student_folder = os.path.join(FACES_FOLDER, student_id)
 os.makedirs(student_folder, exist_ok=True)
-
-# -----------------------------
-# START CAMERA
-# -----------------------------
+# Camera Start
 cap = cv2.VideoCapture(CAMERA_ID)
-
 if not cap.isOpened():
     print("❌ Camera not accessible")
     exit()
@@ -40,9 +26,8 @@ print("📷 Camera started")
 print("➡ Look straight at the camera")
 print("➡ Press Q to quit")
 
-# -----------------------------
-# CAPTURE LOOP
-# -----------------------------
+# Capture Loop
+
 while True:
     ret, frame = cap.read()
     if not ret:
@@ -84,11 +69,7 @@ while True:
 
     if cv2.waitKey(1) & 0xFF == ord('q') or count >= IMAGES_PER_STUDENT:
         break
-
-# -----------------------------
-# CLEANUP
-# -----------------------------
 cap.release()
 cv2.destroyAllWindows()
 
-print("🛑 Face capture completed")
+print("face capture completed")
