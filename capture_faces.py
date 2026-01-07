@@ -9,7 +9,7 @@ face_cascade = cv2.CascadeClassifier(
 )
 
 if face_cascade.empty():
-    print("❌ Haar Cascade NOT loaded")
+    print("Haar Cascade not loaded")
     exit()
 # Input student ID
 student_id = input("Enter Student ID (100, 101, etc): ").strip()
@@ -18,13 +18,13 @@ os.makedirs(student_folder, exist_ok=True)
 # Camera Start
 cap = cv2.VideoCapture(CAMERA_ID)
 if not cap.isOpened():
-    print("❌ Camera not accessible")
+    print(" Camera not accessible")
     exit()
 
 count = 0
-print("📷 Camera started")
-print("➡ Look straight at the camera")
-print("➡ Press Q to quit")
+print("Camera started")
+print("Look straight at the camera")
+print("Press Q to quit")
 
 # Capture Loop
 
@@ -50,7 +50,7 @@ while True:
                 f"img{count + 1}.jpg"
             )
             cv2.imwrite(img_path, face_img)
-            print(f"✅ Saved {img_path}")
+            print(f" Saved {img_path}")
             count += 1
 
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
